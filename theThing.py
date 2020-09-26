@@ -7,7 +7,7 @@ from sqlalchemy import orm
 import sqlalchemy as sa
 
 base = declarative_base()
-#engine = sa.create_engine('postgres://rxrqggyvnlgnra:a4fe0d9cffd7738f9b8c7d225c6b66d53c866ae7c5af9fe1db7dcc5c280e0cd7@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d4c6i9kmtu9s3l')
+engine = sa.create_engine('postgres://team25:team25@localhost:5432/team25')
 base.metadata.bind = engine
 session = orm.scoped_session(orm.sessionmaker())(bind=engine)
 
@@ -37,6 +37,8 @@ class userContent(base):
     user_id = Column(String, primary_key=True)
 
 class generatedTimeline(base):
+    __tablename__ = 'generatedTimeline'
+
     user_id = Column(String, primary_key=True)
     time = Column(Float)
     savings = Column(Float)
