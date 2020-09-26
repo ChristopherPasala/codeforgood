@@ -44,7 +44,7 @@ class generatedTimeline(base):
     savings = Column(Float)
 
 
-newUser = User(email='test@gmail.com', user_id='testUser', typee='student', password='password', name = 'bob')
+newUser = User(email='test2@gmail.com', user_id='testUser2', typee='student2', password='password2', name = 'bob2')
 session.add(newUser)
 session.commit()
 
