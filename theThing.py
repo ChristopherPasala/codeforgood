@@ -7,6 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import orm
+from passlib.apps import custom_app_context as pwd_context
 import sqlalchemy as sa
 
 app = Flask(__name__)
@@ -31,6 +32,12 @@ class User(db.Model):
     password = Column(String)
     name = Column(String)
 
+    def hash_password(self, password):
+        self.password = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password)
+
 class UserGoals(db.Model):
     __tablename__ = 'userGoals'
 
@@ -53,11 +60,102 @@ class GeneratedTimeline(db.Model):
     time = Column(Float)
     savings = Column(Float)
 
+parser = reqparse.RequestParser()
+parser.add_argument('task')
+parser.add_argument('username')
+parser.add_argument('password')
+parser.add_argument('password1')
+parser.add_argument('password2')
+
+
 class Index(Resource):
   def get(self):
     print("HOME PAGE")
 
+
+# Sign up
+class Signup(Resource):
+    def post(self):
+        args = parser.parse_args()
+        print(args)
+        username = args['username']
+        password = args['password']
+        print(username, password)
+        # check for missing arguments
+        if username is None or password is None:
+            abort(400)
+        # check for existing user
+        if User.query.filter_by(username=username).first() is not None:
+            abort(400)
+
+        user = User(username = username)
+        user.hash_password(password)
+        db.session.add(user)
+        db.session.commit()
+
+
+# Login
+class Login(Resource):
+    def post(self):
+        print("Login")
+        args = parser.parse_args()
+        print(args)
+        username = args['username']
+        password = args['password']
+        print(username, password)
+
+        if username is None or password is None:
+            abort (400)
+        
+        # Compare against the database
+
+
+# Update password
+class Updatepass(Resource):
+    def put(self):
+        print("Update Password")
+        args = parser.parse_args()
+        print(args)
+        username = args['username']
+        password1 = args['password1']
+        password2 = args['password2']
+        print(username, password1, password2)
+
+        # Update password for the username
+
+
+# Delete account
+class Delete(Resource):
+    def delete(self):
+        print("Delete account")
+        args = parser.parse_args()
+        username = args['username']
+        print(username)
+
+        # Delete username entry
+
+
+# Get User Information
+class User(Resource):
+    def get(self):
+        print("GET USER INFORMATION")
+        args = parser.parse_args()
+        username = args['username']
+        print(username)
+
+        # Pull data from database and return
+
+##
+## Actually setup the Api resource routing here
+##
+api.add_resource(Signup, '/signup')
+api.add_resource(Login, '/login')
+api.add_resource(Updatepass, '/updatepass')
+api.add_resource(Delete, '/delete')
+api.add_resource(User, '/user')
 api.add_resource(Index, '/')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
     newUser = User(email='test3@gmail.com', user_id='testUser3', typee='student3', password='password3', name = 'bob3')
