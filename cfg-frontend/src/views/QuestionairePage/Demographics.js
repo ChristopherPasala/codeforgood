@@ -1,13 +1,9 @@
 import {
   Button,
   FormControl,
-  FormControlLabel,
-  FormLabel,
   Grid,
   InputLabel,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
 } from "@material-ui/core";
@@ -50,7 +46,7 @@ export default function () {
         <Grid container justify="space-around" alignItems="center">
           <Grid item xs={5}>
             <FormControl fullWidth>
-              <InputLabel id="gender">Ethnicity</InputLabel>
+              <InputLabel id="gender">Gender</InputLabel>
               <Select
                 labelId="gender"
                 value={gender}

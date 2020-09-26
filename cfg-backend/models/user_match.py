@@ -6,4 +6,4 @@ class UserMatch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.user_id))
     user = db.relationship(User, backref='user_matches', foreign_keys=[user_id])
-    matches = db.Column(db.ARRAY(db.Integer, dimensions=1), default=[])
+    matches = db.Column(db.ARRAY(db.Integer, dimensions=2), default=[])

@@ -11,38 +11,20 @@ import json
 class Timeline(Resource):
     def get(self, userid=None):
         # TODO: Accomodate for all goals
-        print("TIMELINE CREATION")
-        student = UserGoals.query.filter_by(user_id=userid).all()[1]
-        curr = UserInfo.query.filter_by(user_id=userid).first()
-        est_int_rate = 0.02
-        initial_val = 50
-        diffage = student.goalAge - curr.age
-        amount = student.goalAmount
-        timeInterval = []
-        finalAmount = initial_val * (1 + est_int_rate/12)**(12 * diffage) #i am so braindead idek if this works
-        for i in range(diffage):
-            timeInterval.append(finalAmount)
-        
-        print(timeInterval)
-        return timeInterval
+        timeIntervals = []
+        print(len(UserGoals.query.filter_by(user_id=userid).all()))
+        for i in range(len(UserGoals.query.filter_by(user_id=userid).all())):
+            student = UserGoals.query.filter_by(user_id=userid).all()[i]
+            curr = UserInfo.query.filter_by(user_id=userid).first()
+            est_int_rate = 0.02
+            initial_val = 50
+            diffage = student.goalAge - curr.age
+            amount = student.goalAmount
+            finalAmount = initial_val * (1 + est_int_rate/12)**(12 * diffage)
+            finalAmount = round(finalAmount, 2)
+            finalAmount = finalAmount * (12 * diffage)
 
-        """
-        lol = amount/diffage
-        timeInterval = []
+            timeIntervals.append(finalAmount)
 
-        for i in range(student.age-curr.age):
-            timeInterval.append(amount)
-        
-        acceptableRange = 2500
-        
-        while acceptableRange > 0:
-            num = random.randrange(24)
-            if num % 2 == 0:
-                acceptableRange -= num
-                timeInterval[randrange(len(timeInterval))] -= num
-            else:
-                acceptableRange -=num
-                timeInterval[randrange(len(timeInterval))] += num
-
-        return jsonify({'interval': timeInterval})
-        """
+        # return timeIntervals
+        return jsonify({'status': 'ok', 'timeline': timeIntervals})

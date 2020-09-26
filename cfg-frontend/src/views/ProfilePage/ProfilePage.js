@@ -1,4 +1,11 @@
-import { makeStyles, Typography, withStyles } from "@material-ui/core";
+import {
+  Avatar,
+  Card,
+  CardHeader,
+  makeStyles,
+  Typography,
+  withStyles,
+} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
@@ -33,6 +40,7 @@ const WhiteTextTypography = withStyles({
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: "6px 16px",
+    textAlign: "center",
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
@@ -50,11 +58,6 @@ const useStyles = makeStyles((theme) => ({
       transform: "translate3d(0, -50%, 0)",
     },
   },
-
-  timelineContainer: {
-    display: "flex",
-  },
-
   description: {
     margin: "1.071rem auto 0",
     maxWidth: "600px",
@@ -67,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: "3",
   },
   mainRaised: {
-    margin: "-60px 30px 0px",
+    margin: "-60px 30px 20px",
     borderRadius: "6px",
     boxShadow:
       "0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)",
@@ -106,6 +109,8 @@ export default function () {
   const [auth, setAuth] = useRecoilState(authState);
   const history = useHistory();
   const [goals, setGoals] = useState([]);
+  const [timeline, setTimeline] = useState([]);
+  const [matches, setMatches] = useState([]);
 
   useEffect(() => {
     Axios.get(`/api/user/${auth.user_id}`).then((res) => {
@@ -121,9 +126,11 @@ export default function () {
           setGoals(res.data.goals);
           Axios.get(`/api/timeline/${auth.user_id}`).then((res) => {
             // do stuff with timeline
+            setTimeline(res.data.timeline);
           });
           Axios.get(`/api/match/${auth.user_id}`).then((res) => {
             // do stuff with the match data!
+            setMatches(res.data.matches);
           });
         }
       });
@@ -143,7 +150,7 @@ export default function () {
                 variant="h3"
                 style={{ textAlign: "center", zIndex: "12" }}
               >
-                Your Timeline
+                Your Profile
               </WhiteTextTypography>
             </div>
           </Parallax>
@@ -157,241 +164,65 @@ export default function () {
                         <img src={profile} alt="..." className={imageClasses} />
                       </div>
                       <div className={classes.name}>
-                        <h3 className={classes.title}>Christian Louboutin</h3>
+                        <h3 className={classes.title}>{auth.name}</h3>
                         <h6>STUDENT</h6>
-                        <div className={classes.timelineContainer}>
-                          {/* ---- BEGIN USER TIMELINE ---- */}
-                          <Timeline align="alternate">
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 18
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-                                <TimelineConnector />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Open a Bank Account
-                                  </Typography>
-                                  <Typography>
-                                    Start an emergency fund.
-                                  </Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 22
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-
-                                <TimelineConnector />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Open a Roth IRA
-                                  </Typography>
-                                  <Typography>
-                                    Plan for my retirement.
-                                  </Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 27
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-
-                                <TimelineConnector />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Start a House Fund
-                                  </Typography>
-                                  <Typography>
-                                    Save for a down payment.
-                                  </Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 32
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Buy a House
-                                  </Typography>
-                                  <Typography>
-                                    With strong credit and cash reserves!
-                                  </Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                          </Timeline>
-                          {/* ---- END USER TIMELINE ---- */}
-
-                          {/* ---- BEGIN PREDICTION TIMELINE ---- */}
-                          <Timeline align="alternate">
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 18
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-
-                                <TimelineConnector />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Open a Bank Account
-                                  </Typography>
-                                  <Typography>$0</Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 22
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-                                <TimelineConnector />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Open a Roth IRA
-                                  </Typography>
-                                  <Typography>$10,000</Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 27
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-
-                                <TimelineConnector />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Start a House Fund
-                                  </Typography>
-                                  <Typography>$50,000</Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                              <TimelineOppositeContent>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  Age 32
-                                </Typography>
-                              </TimelineOppositeContent>
-                              <TimelineSeparator>
-                                <TimelineDot
-                                  variant="outlined"
-                                  color="primary"
-                                />
-                              </TimelineSeparator>
-                              <TimelineContent>
-                                <Paper elevation={3} className={classes.paper}>
-                                  <Typography variant="h6" component="h1">
-                                    Buy a House
-                                  </Typography>
-                                  <Typography>$150,000</Typography>
-                                </Paper>
-                              </TimelineContent>
-                            </TimelineItem>
-                          </Timeline>
-                          {/* ---- END PREDICTION TIMELINE ---- */}
-                        </div>
                       </div>
                     </div>
                   </Grid>
                 </Grid>
+                <Grid container justify="space-around">
+                  <Grid item xs={12} sm={12} md={7}>
+                    {/* ---- BEGIN USER TIMELINE ---- */}
+                    <h3 className={classes.title}>Timeline</h3>
+                    <Timeline align="alternate">
+                      {goals.map((goal, i) => {
+                        return (
+                          <TimelineItem key={i} style={{ textAlign: "center" }}>
+                            <TimelineOppositeContent>
+                              <Typography variant="body2" color="textSecondary">
+                                Age {goal.goalAge}
+                              </Typography>
+                            </TimelineOppositeContent>
+                            <TimelineSeparator>
+                              <TimelineDot variant="outlined" color="primary" />
+                              <TimelineConnector />
+                            </TimelineSeparator>
+                            <TimelineContent>
+                              <Paper elevation={3} className={classes.paper}>
+                                <h4 className={classes.title}>
+                                  {goal.goalName}
+                                </h4>
+                                <p>{`$${timeline[i] || 0}`}</p>
+                              </Paper>
+                            </TimelineContent>
+                          </TimelineItem>
+                        );
+                      })}
+                    </Timeline>
+                    {/* ---- END USER TIMELINE ---- */}
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={5}>
+                    <h3 className={classes.title}>Matches</h3>
+                    {matches.map((match) => {
+                      return (
+                        <Card style={{ marginBottom: "0.5rem" }}>
+                          <CardHeader
+                            avatar={<Avatar>{match[0]}</Avatar>}
+                            title={match}
+                            subheader="(281)898-2332"
+                          />
+                        </Card>
+                      );
+                    })}
+                  </Grid>
+                </Grid>
                 <div className={classes.description}>
                   <p>
-                    An artist of considerable range, Chet Faker — the name taken
-                    by Melbourne-raised, Brooklyn-based Nick Murphy — writes,
-                    performs and records all of his own music, giving it a warm,
-                    intimate feel with a solid groove structure.
+                    Do not save what is left after spending, but spend what is
+                    left after saving. – Warren Buffett
                   </p>
                 </div>
+                <br /> <br />
               </div>
             </div>
           </div>

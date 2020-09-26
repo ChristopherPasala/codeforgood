@@ -40,7 +40,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://flask-app:5000",
   "devDependencies": {
     "recoil-persist": "^0.6.0"
   }

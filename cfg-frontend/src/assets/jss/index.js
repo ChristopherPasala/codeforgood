@@ -1,11 +1,12 @@
-const containerFluid = {
+export const containerFluid = {
   paddingRight: "15px",
   paddingLeft: "15px",
   marginRight: "auto",
   marginLeft: "auto",
   width: "100%",
 };
-const container = {
+
+export const container = {
   ...containerFluid,
   "@media (min-width: 576px)": {
     maxWidth: "540px",
@@ -21,10 +22,10 @@ const container = {
   },
 };
 
-const title = {
+export const title = {
   color: "#3C4858",
   margin: "1.75rem 0 0.875rem",
   textDecoration: "none",
   fontWeight: "700",
-  fontFamily: `"Roboto Slab", "Times New Roman", serif`,
+  fontFamily: `'Roboto Slab', serif`,
 };

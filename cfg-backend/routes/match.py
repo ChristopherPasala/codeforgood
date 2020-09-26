@@ -12,36 +12,36 @@ from models.user import User
 def generate_matches(user_id):
     # gets matched with themselves
     # TODO: update db after matches found
+    high_matches = []
+    mid_matches = []
+    low_matches = []
     matches = []
-    count = 0
-    check = False
+
     student = UserInfo.query.filter_by(user_id=user_id).first()
+    count = 0
     for row in UserInfo.query.limit(100).all():
         if(student.ethnicity == row.ethnicity and student.age == row.age and student.gender == row.gender and not(student.user_id == row.user_id)): #is this age current age or later age?
-            matches.append({student.user_id})
-            check = True
-            if count > 4:
-                break
-        count += 1
-    
-
-    if check == False:
-        for row in UserInfo.query.limit(100).all():
-            if(student.ethnicity == row.ethnicity and student.age == row.age and not(student.user_id == row.user_id)): #is this age current age or later age?
-                matches.append(student.user_id)
-                check = True
-                if count > 4:
-                    break
+            matches.append({row.user.name})
             count += 1
+        if count > 2:
+            break
 
-    if check == False:
-        for row in UserInfo.query.limit(100).all():
-            if(student.ethnicity == row.ethnicity and not(student.user_id == row.user_id)): #is this age current age or later age?
-                matches.append(student.user_id)
-                check = True
-                if count > 4:
-                    break
+    count = 0
+    for row in UserInfo.query.limit(100).all():
+        if(student.ethnicity == row.ethnicity and student.age == row.age and not(student.user_id == row.user_id)): #is this age current age or later age?
+            matches.append(row.user.name)
             count += 1
+        if count > 2:
+            break
+
+    count = 0
+    for row in UserInfo.query.limit(100).all():
+        if(student.ethnicity == row.ethnicity and not(student.user_id == row.user_id)): #is this age current age or later age?
+            matches.append(row.user.name)
+            count += 1
+        if count > 2:
+            break
+
     print(matches)
     return matches
 
@@ -57,9 +57,9 @@ class Match(Resource):
             matches = matches.matches
 
         # Putting the match into the database so that we don't find matches each time
-        match = UserMatch(matches=matches)
-        db.session.add(match)
-        db.session.commit()
+        # match = UserMatch(matches=matches)
+        # db.session.add(match)
+        # db.session.commit()
 
         return jsonify({"matches": matches})
         # Update password for the username

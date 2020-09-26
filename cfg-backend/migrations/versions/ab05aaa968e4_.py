@@ -46,7 +46,7 @@ def upgrade():
     op.create_table('user_matches',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('matches', sa.ARRAY(sa.Integer(), dimensions=1), nullable=True),
+    sa.Column('matches', sa.ARRAY(sa.Integer(), dimensions=2), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.user_id'], ),
     sa.PrimaryKeyConstraint('id')
     )
