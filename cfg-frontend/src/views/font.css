@@ -1,0 +1,7 @@
+@font-face {
+  font-family: oswald;
+  src: url(../assets/Oswald-FontZillion/Fonts/oswald.ttf);
+}
+.headerFont {
+  font-family: oswald;
+}

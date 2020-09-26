@@ -1,0 +1,59 @@
+version: "3.4"
+
+services:
+  postgres:
+    container_name: postgres-cfg
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=docker
+    volumes:
+      - $HOME/docker/volumes/c4g:/var/lib/postgresql/data
+
+  flask-app:
+    container_name: flask-cfg
+    build:
+      context: ./cfg-backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./cfg-backend:/app:cached
+    links:
+      - postgres:postgres
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - DATABASE_URL=postgres://postgres:docker@postgres/cfg
+    depends_on:
+      - postgres
+    command: flask run --host 0.0.0.0 # host=0.0.0.0 to make sure you can connect through Dockers networking
+
+  pgweb:
+    container_name: pgweb-cfg
+    restart: always
+    image: sosedoff/pgweb
+    ports:
+      - "8081:8081"
+    links:
+      - postgres:postgres
+    environment:
+      - DATABASE_URL=postgres://postgres:docker@postgres/cfg?sslmode=disable
+    depends_on:
+      - postgres
+
+  frontend:
+    container_name: react-cfg
+    build:
+      context: ./cfg-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./cfg-frontend/src:/app/src
+      - ./cfg-frontend/public:/app/public
+    links:
+      - "flask-app:flask-app"
+    stdin_open: true
